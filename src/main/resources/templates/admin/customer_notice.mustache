@@ -1,0 +1,151 @@
+{{>admin/layout/manager_header}}
+
+<!--컨테이너1 시작-->
+<div class="flex_center">
+    <div class="main">
+        <div class="container">
+            <div class="section1">
+                <div class="section_title">캠핑장</div>
+                <ul class="section_ul">
+                    <li><i class="fa-solid fa-tent"></i><a href="/admin/camp/setting">캠핑장 관리</a></li>
+                    <li><i class="fa-solid fa-compass"></i><a href="/admin/camp/current">캠핑장 현황 · 리뷰</a></li>
+                </ul>
+                <div class="short_line"></div>
+            </div>
+
+            <div class="section1">
+                <div class="section_title">회원</div>
+                <ul class="section_ul">
+                    <li><i class="fa-solid fa-user"></i><a href="/admin/user">회원 관리</a></li>
+                </ul>
+                <div class="short_line"></div>
+            </div>
+
+            <div class="section1">
+                <div class="section_title">고객센터</div>
+                <ul class="section_ul">
+                    <li><i class="fa-solid fa-question"></i><a href="/admin/customer/faq">FAQ</a></li>
+                    <li><i class="fa-regular fa-clipboard"></i><a
+                            href="/admin/customer/notice">공지사항</a></li>
+                </ul>
+                <div class="short_line"></div>
+            </div>
+        </div>
+        <!--컨테이너1 끝-->
+
+        <!--컨테이너2 시작-->
+        <div class="check_container">
+            <div class="admin_container_title">
+                <h3>공지사항</h3>
+            </div>
+            <form id="search-form" action="/admin/customer/notice" method="get">
+                <div class="custom_search">
+                    <input type="text" name="keyword" placeholder="검색 하기">
+                    <button type="submit" class="custom_search_button">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </form>
+            <div>
+                <div class="custom_flex_end">
+                    <button type="button" class="insert_to_modal" data-bs-toggle="modal"
+                            data-bs-target="#fqa_insert_modal">등록
+                    </button>
+                </div>
+                <div style="padding: 15px">
+                    <table class="table table-hover" style="table-layout: fixed">
+                        <thead>
+                        <tr class="faq_th">
+                            <th style="width: 50px">#</th>
+                            <th style="width: 250px">제목</th>
+                            <th style="width: 300px">내용</th>
+                            <th>작성 날짜</th>
+                            <th>수정</th>
+                            <th>삭제</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#noticeDTOList}}
+                            <tr class="faq_td">
+                                <td>{{noticeId}}</td>
+                                <td class="title" style="text-align: start">{{title}}</td>
+                                <td class="content" style="text-align: start">{{content}}</td>
+                                <td>{{createdAt}}</td>
+                                <td>
+                                    <button type="button" class="update_to_modal" data-bs-toggle="modal"
+                                            data-bs-target="#faq_modal" onclick="fetchDetailNotice({{noticeId}})">
+                                        수정
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="delete_Button" id="userDelete" data-id="1" onclick="fetchDeleteNotice({{noticeId}})">삭제
+                                    </button>
+                                </td>
+                            </tr>
+                        {{/noticeDTOList}}
+                        </tbody>
+                    </table>
+                    <ul class="pagination">
+                        <li class="page-item {{#first}}disabled{{/first}}"><a class="page-link" href="/admin/customer/notice?page={{prevPage}}&keyword={{keyword}}">Prev</a></li>
+                        <li class="page-item {{#last}}disabled{{/last}}"><a class="page-link" href="/admin/customer/notice?page={{nextPage}}&keyword={{keyword}}">Next</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="modal" id="faq_modal">
+                <div class="modal-dialog modal-lg">
+                    <div class="faq_modal_content">
+
+                        <!-- Modal body -->
+                        <div class="faq_modal_body">
+                            <div class="button">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="body">
+                                <div class="column">공지사항<span> 수정</span></div>
+                                <input class="input" type="text" placeholder="" id="update_title" required>
+                                <textarea class="textarea" id="update_content" required></textarea>
+                            </div>
+                            <div class="button_form">
+                                <div class="button" style="margin-right: 10px;">
+                                    <input type="hidden" id="notice_id">
+                                    <button type="button" class="update_button update_submit" data-bs-dismiss="modal" onclick="fetchUpdateNotice()">수정
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal" id="fqa_insert_modal">
+                <div class="modal-dialog modal-lg">
+                    <div class="faq_modal_content">
+
+                        <!-- Modal body -->
+                        <div class="faq_modal_body">
+                            <div class="button">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="body">
+                                <div class="column">공지사항<span> 등록</span></div>
+                                <input class="input" type="text" placeholder="제목을 입력해주세요" id="insert_title">
+                                <textarea class="textarea" placeholder="내용을 입력해주세요" id="insert_content"></textarea>
+                            </div>
+                            <div class="button" style="margin-right: 10px;">
+                                <button type="button" class="insert_button insert_submit" data-bs-dismiss="modal" onclick="fetchSaveNotice()">등록
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--컨테이너2 끝-->
+    </div>
+</div>
+<script src="/js/customer_notice.js">
+</script>
+
+</body>
+</html>
